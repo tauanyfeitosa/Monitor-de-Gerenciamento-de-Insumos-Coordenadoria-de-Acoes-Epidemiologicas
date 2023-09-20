@@ -1,11 +1,13 @@
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import pandas as pd
-import matplotlib.pyplot as plt
 
 class GraficoDeBarrasBase:
-    def __init__(self, entrada_col, saida_col, titulo):
+    def __init__(self, entrada_col, saida_col, titulo, frame):
         self.entrada_col = entrada_col
         self.saida_col = saida_col
         self.titulo = titulo
+        self.frame = frame
         self.dataset = self.create_dataset()
 
     def create_dataset(self):
@@ -14,7 +16,7 @@ class GraficoDeBarrasBase:
             df = pd.read_csv("dados.csv", encoding="utf-8")
 
             saldo = 0
-            dataset = {"Entrada": [], "Saída": [], "Saldo": []}
+            dataset = {"Entrada": [], "Saída": [], "Saldo": [], "Mes": []}
 
             # Itera pelas linhas do arquivo CSV
             for _, row in df.iterrows():
@@ -25,6 +27,7 @@ class GraficoDeBarrasBase:
                 dataset["Entrada"].append(entrada)
                 dataset["Saída"].append(saida)
                 dataset["Saldo"].append(saldo)
+                dataset["Mes"].append(mes)
 
             df = pd.DataFrame(dataset)
             df.index = df.index + 1  # Índices começam em 1
@@ -33,19 +36,30 @@ class GraficoDeBarrasBase:
         except Exception as e:
             # Em caso de erro na leitura do arquivo CSV, imprime o erro
             print(e)
+            return None
 
     def create_chart(self):
-        plt.figure(figsize=(14, 7))
-        plt.title(self.get_titulo())
-        plt.xlabel("Mês (de jun de 2022 a mai de 2023)")
-        plt.ylabel("Quantidade de Insumos")
-        plt.bar(self.dataset.index, self.dataset["Entrada"], label="Entrada")
-        plt.bar(self.dataset.index, self.dataset["Saída"], label="Saída", bottom=self.dataset["Entrada"])
-        plt.bar(self.dataset.index, self.dataset["Saldo"], label="Saldo", bottom=self.dataset["Entrada"] + self.dataset["Saída"])
-        plt.legend()
-        plt.xticks(self.dataset.index, self.dataset.index, rotation=45)
-        plt.tight_layout()
-        plt.show()
+        if self.dataset is not None and not self.dataset.empty:  # Verifica se o dataset não é vazio
+            self.figure = Figure(figsize=(12, 8))
+            ax = self.figure.add_subplot(111)
 
-    def get_titulo(self):
-        return self.titulo
+            ax.set_title(self.titulo)
+            ax.set_xlabel("Mês (de jun de 2022 a mai de 2023)")
+            ax.set_ylabel("Quantidade de Insumos")
+
+            ax.bar(self.dataset.index, self.dataset["Entrada"], label="Entrada")
+            ax.bar(self.dataset.index, self.dataset["Saída"], label="Saída", bottom=self.dataset["Entrada"])
+            ax.bar(self.dataset.index, self.dataset["Saldo"], label="Saldo",
+                   bottom=self.dataset["Entrada"] + self.dataset["Saída"])
+
+            ax.legend()
+            ax.set_xticks(self.dataset.index)
+            ax.set_xticklabels(self.dataset["Mes"], rotation=45)
+
+            self.canvas = FigureCanvasTkAgg(self.figure, master=self.frame)
+            self.canvas_widget = self.canvas.get_tk_widget()
+            self.canvas_widget.pack()
+        else:
+            print("O dataset está vazio ou não foi carregado corretamente.")
+
+
