@@ -3,6 +3,7 @@ from GraficoDeBarrasInsumos import GraficoDeBarrasRemedios, GraficoDeBarrasIAB, 
     GraficoDeBarrasVacinas, GraficoDeBarrasTR, GraficoDeBarrasDG
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
 
 def mostrar_grafico(grafo_class):
     nova_janela = tk.Toplevel(window)
@@ -33,6 +34,22 @@ botao_vacinas_criancas.pack()
 botao_vacinas.pack()
 botao_tr.pack()
 botao_dg.pack()
+
+# Função para receber e salvar o arquivo CSV
+def receber_arquivo():
+    # Abre uma caixa de diálogo para o usuário selecionar o arquivo CSV
+    arquivo_selecionado = filedialog.askopenfilename(filetypes=[("Arquivos CSV", "*.csv")])
+
+    # Verifica se um arquivo foi selecionado
+    if arquivo_selecionado:
+        # Copie o arquivo selecionado para a raiz do projeto
+        import shutil
+        arquivo_destino = "dados.csv"
+        shutil.copy(arquivo_selecionado, arquivo_destino)
+
+# Cria um botão para receber um arquivo CSV do usuário
+botao_arquivo = ttk.Button(window, text='Selecionar Arquivo CSV', command=receber_arquivo)
+botao_arquivo.pack()
 
 # Inicia a interface gráfica
 window.mainloop()
