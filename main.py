@@ -4,6 +4,7 @@ from GraficoDeBarrasInsumos import GraficoDeBarrasRemedios, GraficoDeBarrasIAB, 
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import messagebox  # Importe a biblioteca messagebox
 
 def mostrar_grafico(grafo_class):
     nova_janela = tk.Toplevel(window)
@@ -37,15 +38,19 @@ botao_dg.pack()
 
 # Função para receber e salvar o arquivo CSV
 def receber_arquivo():
-    # Abre uma caixa de diálogo para o usuário selecionar o arquivo CSV
-    arquivo_selecionado = filedialog.askopenfilename(filetypes=[("Arquivos CSV", "*.csv")])
+    try:
+        # Abre uma caixa de diálogo para o usuário selecionar o arquivo CSV
+        arquivo_selecionado = filedialog.askopenfilename(filetypes=[("Arquivos CSV", "*.csv")])
 
-    # Verifica se um arquivo foi selecionado
-    if arquivo_selecionado:
-        # Copie o arquivo selecionado para a raiz do projeto
-        import shutil
-        arquivo_destino = "dados.csv"
-        shutil.copy(arquivo_selecionado, arquivo_destino)
+        # Verifica se um arquivo foi selecionado
+        if arquivo_selecionado:
+            # Copie o arquivo selecionado para a raiz do projeto
+            import shutil
+            arquivo_destino = "dados.csv"
+            shutil.copy(arquivo_selecionado, arquivo_destino)
+            messagebox.showinfo("Sucesso", "Arquivo copiado com sucesso!")
+    except Exception as e:
+        messagebox.showerror("Erro", f"Ocorreu um erro ao copiar o arquivo: {str(e)}")
 
 # Cria um botão para receber um arquivo CSV do usuário
 botao_arquivo = ttk.Button(window, text='Selecionar Arquivo CSV', command=receber_arquivo)
