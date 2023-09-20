@@ -1,9 +1,11 @@
 from GraficoDeBarrasBase import GraficoDeBarrasBase
 
+
 class GraficoDeBarrasRemedios(GraficoDeBarrasBase):
     def __init__(self, frame):
         super().__init__("Entrada - Remedios", "Saida - Remedios",
                          "Gráfico de Barras - Entrada e Saída de Medicamentos por Mês", frame)
+
 
 class GraficoDeBarrasIAB(GraficoDeBarrasBase):
     def __init__(self, frame):
