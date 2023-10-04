@@ -44,7 +44,7 @@ class GUIUsuario(tk.Tk):
         self.canvas = tk.Canvas(self, bg='#c6e5b1')
         self.canvas.pack(side='top', fill='both', expand=True)
 
-        # Adicione a imagem ao canvas e centralize-a.
+        #Adicione a imagem ao canvas e centralize-a.
         self.adicionar_imagem_centralizada()
 
         # Crie um painel de botões.
@@ -135,18 +135,16 @@ class GUIUsuario(tk.Tk):
 
     # O método 'executar_mostrar_arquivo' abre uma caixa de diálogo para selecionar um arquivo CSV.
     def executar_mostrar_arquivo(self):
-        if os.path.exists("dados.csv"):
-            arquivo_selecionado = "dados.csv"
-        else:
-            arquivo_selecionado = filedialog.askopenfilename(filetypes=[("Arquivos CSV", "*.csv")])
-            if not arquivo_selecionado:
-                return
+        arquivo_selecionado = filedialog.askopenfilename(filetypes=[("Arquivos CSV", "*.csv")])
+        if not arquivo_selecionado:
+            return
 
-            # Copie o arquivo selecionado para "dados.csv" e exiba uma mensagem de sucesso.
-            shutil.copy(arquivo_selecionado, "dados.csv")
-            messagebox.showinfo("Sucesso", "Arquivo copiado com sucesso!")
+        # Copie o arquivo selecionado para "dados.csv" e exiba uma mensagem de sucesso.
+        shutil.copy(arquivo_selecionado, "dados.csv")
+        messagebox.showinfo("Sucesso", "Arquivo copiado com sucesso!")
 
         # Atualize a instância da classe ArquivoCSV com o novo arquivo selecionado.
         self.arquivo_csv = ArquivoCSV(self.comboBoxAno)
         self.lista_anos = self.arquivo_csv.atualizar_arquivo_csv()
+
 
